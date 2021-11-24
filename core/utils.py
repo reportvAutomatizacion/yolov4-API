@@ -159,18 +159,18 @@ def read_class_names(class_file_name):
             names[ID] = name.strip('\n')
     return names
 
-def load_config(FLAGS):
-    if FLAGS.tiny:
+def load_config(tiny,model):
+    if tiny:
         STRIDES = np.array(cfg.YOLO.STRIDES_TINY)
-        ANCHORS = get_anchors(cfg.YOLO.ANCHORS_TINY, FLAGS.tiny)
-        XYSCALE = cfg.YOLO.XYSCALE_TINY if FLAGS.model == 'yolov4' else [1, 1]
+        ANCHORS = get_anchors(cfg.YOLO.ANCHORS_TINY, tiny)
+        XYSCALE = cfg.YOLO.XYSCALE_TINY if model == 'yolov4' else [1, 1]
     else:
         STRIDES = np.array(cfg.YOLO.STRIDES)
-        if FLAGS.model == 'yolov4':
-            ANCHORS = get_anchors(cfg.YOLO.ANCHORS, FLAGS.tiny)
-        elif FLAGS.model == 'yolov3':
-            ANCHORS = get_anchors(cfg.YOLO.ANCHORS_V3, FLAGS.tiny)
-        XYSCALE = cfg.YOLO.XYSCALE if FLAGS.model == 'yolov4' else [1, 1, 1]
+        if model == 'yolov4':
+            ANCHORS = get_anchors(cfg.YOLO.ANCHORS, tiny)
+        elif model == 'yolov3':
+            ANCHORS = get_anchors(cfg.YOLO.ANCHORS_V3, tiny)
+        XYSCALE = cfg.YOLO.XYSCALE if model == 'yolov4' else [1, 1, 1]
     NUM_CLASS = len(read_class_names(cfg.YOLO.CLASSES))
 
     return STRIDES, ANCHORS, NUM_CLASS, XYSCALE

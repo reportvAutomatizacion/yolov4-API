@@ -48,7 +48,7 @@ class Yolo:
         self.size= 416# 'resize images to'
         self.tiny= False# 'yolo or yolo-tiny'
         self.model= 'yolov4'# 'yolov3 or yolov4'
-        self.images= './data/images/dog.jpg'# 'path to input image'
+        #self.images= 'data/images/dog.jpg'# 'path to input image'
         self.output= './detections/'# 'path to output folder'
         self.iou= 0.45# 'iou threshold'
         self.score= 0.50 #'score threshold
@@ -64,7 +64,7 @@ class Yolo:
 
         
 
-    def yolo_v4(_argv):
+    def yolo_v4(self, img_path):
 
         
 
@@ -72,19 +72,19 @@ class Yolo:
         config = ConfigProto()
         config.gpu_options.allow_growth = True
         session = InteractiveSession(config=config)
-        STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(FLAGS)
-        input_size = FLAGS.size
-        images = FLAGS.images
-
+        STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
+        input_size = self.size
+        images = [img_path]
+        print('path',images)
         # load model
-        if FLAGS.framework == 'tflite':
-                interpreter = tf.lite.Interpreter(model_path=FLAGS.weights)
+        if self.framework == 'tflite':
+                interpreter = tf.lite.Interpreter(model_path=self.weights)
         else:
-                saved_model_loaded = tf.saved_model.load(FLAGS.weights, tags=[tag_constants.SERVING])
+                saved_model_loaded = tf.saved_model.load(self.weights, tags=[tag_constants.SERVING])
 
         # loop through images in list and run Yolov4 model on each
         for count, image_path in enumerate(images, 1):
-            print(image_path)
+            print('image_path',image_path)
             original_image = cv2.imread(image_path)
             original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
 
@@ -100,14 +100,14 @@ class Yolo:
                 images_data.append(image_data)
             images_data = np.asarray(images_data).astype(np.float32)
 
-            if FLAGS.framework == 'tflite':
+            if self.framework == 'tflite':
                 interpreter.allocate_tensors()
                 input_details = interpreter.get_input_details()
                 output_details = interpreter.get_output_details()
                 interpreter.set_tensor(input_details[0]['index'], images_data)
                 interpreter.invoke()
                 pred = [interpreter.get_tensor(output_details[i]['index']) for i in range(len(output_details))]
-                if FLAGS.model == 'yolov3' and FLAGS.tiny == True:
+                if self.model == 'yolov3' and self.tiny == True:
                     boxes, pred_conf = filter_boxes(pred[1], pred[0], score_threshold=0.25, input_shape=tf.constant([input_size, input_size]))
                 else:
                     boxes, pred_conf = filter_boxes(pred[0], pred[1], score_threshold=0.25, input_shape=tf.constant([input_size, input_size]))
@@ -126,8 +126,8 @@ class Yolo:
                     pred_conf, (tf.shape(pred_conf)[0], -1, tf.shape(pred_conf)[-1])),
                 max_output_size_per_class=50,
                 max_total_size=50,
-                iou_threshold=FLAGS.iou,
-                score_threshold=FLAGS.score
+                iou_threshold=self.iou,
+                score_threshold=self.score
             )
 
             # format bounding boxes from normalized ymin, xmin, ymax, xmax ---> xmin, ymin, xmax, ymax
@@ -147,7 +147,7 @@ class Yolo:
             #allowed_classes = ['person']
 
             # if crop flag is enabled, crop each detection and save it as new image
-            if FLAGS.crop:
+            if self.crop:
                 crop_path = os.path.join(os.getcwd(), 'detections', 'crop', image_name)
                 try:
                     os.mkdir(crop_path)
@@ -156,25 +156,25 @@ class Yolo:
                 crop_objects(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB), pred_bbox, crop_path, allowed_classes)
 
             # if ocr flag is enabled, perform general text extraction using Tesseract OCR on object detection bounding box
-            if FLAGS.ocr:
+            if self.ocr:
                 ocr(cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB), pred_bbox)
 
             # if count flag is enabled, perform counting of objects
-            if FLAGS.count:
+            if self.count:
                 # count objects found
                 counted_classes = count_objects(pred_bbox, by_class = False, allowed_classes=allowed_classes)
                 # loop through dict and print
                 for key, value in counted_classes.items():
                     print("Number of {}s: {}".format(key, value))
-                image = utils.draw_bbox(original_image, pred_bbox, FLAGS.info, counted_classes, allowed_classes=allowed_classes, read_plate = FLAGS.plate)
+                image = utils.draw_bbox(original_image, pred_bbox, self.info, counted_classes, allowed_classes=allowed_classes, read_plate = self.plate)
             else:
-                image = utils.draw_bbox(original_image, pred_bbox, FLAGS.info, allowed_classes=allowed_classes, read_plate = FLAGS.plate)
+                image = utils.draw_bbox(original_image, pred_bbox, self.info, allowed_classes=allowed_classes, read_plate = self.plate)
             
             image = Image.fromarray(image.astype(np.uint8))
-            if not FLAGS.dont_show:
+            if not self.dont_show:
                 image.show()
             image = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
-            cv2.imwrite(FLAGS.output + 'detection' + str(count) + '.png', image)
+            cv2.imwrite(self.output + 'detection' + str(count) + '.png', image)
 
             print(bboxes)
             xmin=9999
@@ -196,7 +196,7 @@ class Yolo:
                     if int(box[3])>ymax:
                         ymax=int(box[3])
                     
-            print (xmin,ymin,xmax,ymax) 
+            
 
             return xmin,ymin,xmax,ymax
 

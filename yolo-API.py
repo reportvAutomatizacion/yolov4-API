@@ -32,10 +32,10 @@ def yolov4():
     '''
     print('en yolo')
 
-    #model.yolo_v4()
-    x_min,y_min,x_max,y_max = model.yolo_v4()
+    img_path='data/images/dog.jpg'
+    x_min,y_min,x_max,y_max = model.yolo_v4(img_path)
     print('lo paso')
-
+    print (x_min,y_min,x_max,y_max) 
     
     return {
              'x_min': x_min,
