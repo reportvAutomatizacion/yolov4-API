@@ -12,7 +12,7 @@ from yoloclass import Yolo
 # 2. Create the app object
 app = FastAPI()
 
-model= Yolo
+model= Yolo()
 
 # 3. Index route, opens automatically on http://127.0.0.1:8000
 @app.get('/')
@@ -31,18 +31,19 @@ def yolov4():
 
     '''
     print('en yolo')
-    model.runyolo
-    #x_min,y_min,x_max,y_max = model.yolo_v4
+
+    #model.yolo_v4()
+    x_min,y_min,x_max,y_max = model.yolo_v4()
     print('lo paso')
 
-    '''
+    
     return {
              'x_min': x_min,
              'y_min': y_min,
              'x_max':x_max,
              'y_max': y_max,
           }
-'''
+
 
 
 # 5. Run the API with uvicorn

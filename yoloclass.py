@@ -17,6 +17,9 @@ import numpy as np
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
+#framework='tf' #(tf, tflite, trt)
+
+
 flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
 flags.DEFINE_string('weights', './checkpoints/yolov4-416',
                     'path to weights file')
@@ -25,7 +28,6 @@ flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
 flags.DEFINE_string('model', 'yolov4', 'yolov3 or yolov4')
 flags.DEFINE_list('images', './data/images/dog.jpg', 'path to input image')
 
-#flags.DEFINE_list('images', imagenes, 'path to input image')
 
 flags.DEFINE_string('output', './detections/', 'path to output folder')
 flags.DEFINE_float('iou', 0.45, 'iou threshold')
@@ -178,22 +180,14 @@ class Yolo:
 
             return xmin,ymin,xmax,ymax
 
-    def runyolo():
-
-            app.run(Yolo.yolo_v4)
-
-
-print(Yolo.yolo_v4)
 
 
 
-
-'''
 if __name__ == '__main__':
     
     try:
         app.run(Yolo.yolo_v4)
     except SystemExit:
         pass
-'''
+
     
