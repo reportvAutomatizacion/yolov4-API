@@ -18,8 +18,7 @@ from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
 #framework='tf' #(tf, tflite, trt)
-
-
+'''
 flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
 flags.DEFINE_string('weights', './checkpoints/yolov4-416',
                     'path to weights file')
@@ -38,15 +37,36 @@ flags.DEFINE_boolean('info', False, 'print info on detections')
 flags.DEFINE_boolean('crop', False, 'crop detections from images')
 flags.DEFINE_boolean('ocr', False, 'perform generic OCR on detection regions')
 flags.DEFINE_boolean('plate', False, 'perform license plate recognition')
+'''
 
 
 class Yolo:
 
     def __init__(self):
+        self.framework='tf' #(tf, tflite, trt')
+        self.weights= './checkpoints/yolov4-416' #'path to weights file'
+        self.size= 416# 'resize images to'
+        self.tiny= False# 'yolo or yolo-tiny'
+        self.model= 'yolov4'# 'yolov3 or yolov4'
+        self.images= './data/images/dog.jpg'# 'path to input image'
+        self.output= './detections/'# 'path to output folder'
+        self.iou= 0.45# 'iou threshold'
+        self.score= 0.50 #'score threshold
+        self.count=False # count objects within images
+        self.dont_show=False #'dont show image output'
+        self.info=False #print info on detections
+        self.crop=False #crop detections from images
+        self.ocr=False #perform generic OCR on detection regions
+        self.plate=False #perform license plate recognition
 
-        pass
+        
+        
+
+        
 
     def yolo_v4(_argv):
+
+        
 
         print('Yolo v4')
         config = ConfigProto()
@@ -182,12 +202,10 @@ class Yolo:
 
 
 
-
 if __name__ == '__main__':
     
     try:
         app.run(Yolo.yolo_v4)
     except SystemExit:
         pass
-
-    
+ 
