@@ -1,5 +1,6 @@
 #Model and image folders
 data/yolov4.weights
+checkpoints/
 
 *png
 *jpg
