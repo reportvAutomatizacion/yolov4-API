@@ -44,7 +44,6 @@ class Yolo:
 
         pass
 
-    
     def yolo_v4(_argv):
 
         print('Yolo v4')
@@ -177,13 +176,24 @@ class Yolo:
                     
             print (xmin,ymin,xmax,ymax) 
 
-        return xmin,ymin,xmax,ymax
+            return xmin,ymin,xmax,ymax
+
+    def runyolo():
+
+            app.run(Yolo.yolo_v4)
+
+
+print(Yolo.yolo_v4)
 
 
 
+
+'''
 if __name__ == '__main__':
+    
     try:
         app.run(Yolo.yolo_v4)
     except SystemExit:
         pass
-
+'''
+    

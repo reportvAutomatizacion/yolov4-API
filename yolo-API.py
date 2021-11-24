@@ -31,7 +31,7 @@ def yolov4():
 
     '''
     print('en yolo')
-    model.yolo_v4
+    model.runyolo
     #x_min,y_min,x_max,y_max = model.yolo_v4
     print('lo paso')
 
