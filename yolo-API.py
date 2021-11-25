@@ -14,6 +14,9 @@ app = FastAPI()
 
 model= Yolo()
 
+class Data(BaseModel):
+    path: str #image path
+
 # 3. Index route, opens automatically on http://127.0.0.1:8000
 @app.get('/')
 def index():
@@ -25,7 +28,7 @@ def index():
 # 4. Route with a single parameter, returns the parameter within a message
 #    Located at: http://127.0.0.1:8000/AnyNameHere
 @app.post('/yolov4/')
-def yolov4():
+def yolov4(params: Data):
     '''
     Corre una arquitectura Yolo V4
 
