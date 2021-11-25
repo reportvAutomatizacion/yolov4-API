@@ -66,7 +66,7 @@ class Yolo:
 
     def yolo_v4(self, img_path):
 
-        
+        no_object=True
 
         print('Yolo v4')
         config = ConfigProto()
@@ -195,10 +195,14 @@ class Yolo:
 
                     if int(box[3])>ymax:
                         ymax=int(box[3])
-                    
-            
 
-            return xmin,ymin,xmax,ymax
+                    no_object=False  
+
+                    #cajas.append([box])
+            
+            boxes, scores, classes, num_objects = pred_bbox
+            return boxes, scores, classes, num_objects, no_object
+            #return xmin,ymin,xmax,ymax,no_object
 
 
 
