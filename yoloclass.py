@@ -51,7 +51,7 @@ class Yolo:
         #self.images= 'data/images/dog.jpg'# 'path to input image'
         self.output= './detections/'# 'path to output folder'
         self.iou= 0.45# 'iou threshold'
-        self.score= 0.50 #'score threshold
+        self.score= 0.8 #'score threshold
         self.count=False # count objects within images
         self.dont_show=False #'dont show image output'
         self.info=False #print info on detections
@@ -75,7 +75,7 @@ class Yolo:
         STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
         input_size = self.size
         images = [img_path]
-        print('path',images)
+        #print('path',images)
         # load model
         if self.framework == 'tflite':
                 interpreter = tf.lite.Interpreter(model_path=self.weights)
@@ -176,32 +176,44 @@ class Yolo:
             image = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
             cv2.imwrite(self.output + 'detection' + str(count) + '.png', image)
 
-            print(bboxes)
+            #print(bboxes)
             xmin=9999
             ymin=9999
             xmax=0
             ymax=0
-            for box in bboxes:
+            cajas=list()
+            etiquetas=list()
+            for count,box in enumerate(bboxes):
                 if int(box[0])!=0 and int(box[1])!=0 and int(box[2])!=0 and int(box[3]!=0):
 
-                    if int(box[0])<xmin:
-                        xmin=int(box[0])
-                    
-                    if int(box[1])<ymin:
-                        ymin=int(box[1])
+                    coords=list()
+                    coords.append(int(box[0]))
+                    coords.append(int(box[1]))
+                    coords.append(int(box[2]))
+                    coords.append(int(box[3]))
 
-                    if int(box[2])>xmax:
-                        xmax=int(box[2])
-
-                    if int(box[3])>ymax:
-                        ymax=int(box[3])
 
                     no_object=False  
 
-                    #cajas.append([box])
+                    cajas.append(coords)
+
+                    classes = read_class_names(cfg.YOLO.CLASSES)
+
+                    etiquetas.append(classes[count])
+
+
+                    
+
+
             
             boxes, scores, classes, num_objects = pred_bbox
-            return boxes, scores, classes, num_objects, no_object
+
+            scores=list(map(float,scores))
+            #classes=list(map(int,classes))
+            num_objects=int(num_objects)
+            print('boxes', cajas, scores, etiquetas, num_objects)
+            
+            return cajas, scores, etiquetas, num_objects, no_object
             #return xmin,ymin,xmax,ymax,no_object
 
 

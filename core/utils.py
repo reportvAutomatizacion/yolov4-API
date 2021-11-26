@@ -214,7 +214,7 @@ def format_boxes(bboxes, image_height, image_width):
     return bboxes
 
 def draw_bbox(image, bboxes, info = False, counted_classes = None, show_label=True, allowed_classes=list(read_class_names(cfg.YOLO.CLASSES).values()), read_plate = False):
-    print(bboxes)
+    #print(bboxes)
     
     classes = read_class_names(cfg.YOLO.CLASSES)
     num_classes = len(classes)

@@ -35,9 +35,11 @@ def yolov4(params: Data):
     '''
     print('en yolo')
 
-    img_path='data\images\dog.jpg'
-    #x_min,y_min,x_max,y_max, no_object = model.yolo_v4(params.path)
-    boxes, scores, classes, num_objects, no_object = model.yolo_v4(img_path)#params.path)
+    #img_path='data\images\dog.jpg'
+    #boxes, scores, classes, num_objects, no_object = model.yolo_v4(img_path)
+
+    
+    boxes, scores, classes, num_objects, no_object = model.yolo_v4(params.path)
 
 
     print('lo paso')
@@ -45,22 +47,12 @@ def yolov4(params: Data):
 
     return {
                 'boxes': boxes,
-                'no_object': no_object,
-          }
-    '''
-    return {
-             'x_min': x_min,
-             'y_min': y_min,
-             'x_max':x_max,
-             'y_max': y_max,
-             'no_object': no_object,
-          }
-
-          'boxes': boxes,
                 'score': scores,
                 'classes': classes,
                 'num_objects': num_objects,
-'''
+                'no_object': no_object,
+          }
+  
 
 
 # 5. Run the API with uvicorn
