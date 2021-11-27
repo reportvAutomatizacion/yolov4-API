@@ -53,7 +53,7 @@ class Yolo:
         self.iou= 0.45# 'iou threshold'
         self.score= 0.8 #'score threshold
         self.count=False # count objects within images
-        self.dont_show=False #'dont show image output'
+        self.dont_show=True #'dont show image output'
         self.info=False #print info on detections
         self.crop=False #crop detections from images
         self.ocr=False #perform generic OCR on detection regions
@@ -183,8 +183,14 @@ class Yolo:
             ymax=0
             cajas=list()
             etiquetas=list()
-            for count,box in enumerate(bboxes):
-                if int(box[0])!=0 and int(box[1])!=0 and int(box[2])!=0 and int(box[3]!=0):
+
+
+            boxes, scores, pred_classes, num_objects = pred_bbox
+
+            print('predicciones', boxes, scores, pred_classes, num_objects)
+            
+            for count,box in enumerate(boxes):
+                if int(box[0])!=0 or int(box[1])!=0 or int(box[2])!=0 or int(box[3]!=0):
 
                     coords=list()
                     coords.append(int(box[0]))
@@ -198,16 +204,15 @@ class Yolo:
                     cajas.append(coords)
 
                     classes = read_class_names(cfg.YOLO.CLASSES)
+                    #num_classes = len(classes)
 
-                    etiquetas.append(classes[count])
+                    class_ind = int(pred_classes[count])
+                    class_name = classes[class_ind]
+
+                    etiquetas.append(class_name)
 
 
-                    
-
-
-            
-            boxes, scores, classes, num_objects = pred_bbox
-
+                
             scores=list(map(float,scores))
             #classes=list(map(int,classes))
             num_objects=int(num_objects)
