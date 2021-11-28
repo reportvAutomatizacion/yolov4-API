@@ -216,7 +216,7 @@ class Yolo:
             scores=list(map(float,scores))
             #classes=list(map(int,classes))
             num_objects=int(num_objects)
-            print('boxes', cajas, scores, etiquetas, num_objects)
+            #print('boxes', cajas, scores, etiquetas, num_objects)
             
             return cajas, scores, etiquetas, num_objects, no_object
             #return xmin,ymin,xmax,ymax,no_object
