@@ -33,17 +33,11 @@ def yolov4(params: Data):
     Corre una arquitectura Yolo V4
 
     '''
-    print('en yolo')
-
-    #img_path='data\images\dog.jpg'
-    #boxes, scores, classes, num_objects, no_object = model.yolo_v4(img_path)
+    
 
     
     boxes, scores, classes, num_objects, no_object = model.yolo_v4(params.path)
 
-
-    print('lo paso')
-    #print (x_min,y_min,x_max,y_max) 
 
     return {
                 'boxes': boxes,

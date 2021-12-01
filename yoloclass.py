@@ -51,7 +51,7 @@ class Yolo:
         #self.images= 'data/images/dog.jpg'# 'path to input image'
         self.output= './detections/'# 'path to output folder'
         self.iou= 0.45# 'iou threshold'
-        self.score= 0.8 #'score threshold
+        self.score= 0.85 #'score threshold
         self.count=False # count objects within images
         self.dont_show=True #'dont show image output'
         self.info=False #print info on detections
@@ -75,7 +75,7 @@ class Yolo:
         STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
         input_size = self.size
         images = [img_path]
-        #print('path',images)
+        
         # load model
         if self.framework == 'tflite':
                 interpreter = tf.lite.Interpreter(model_path=self.weights)
@@ -176,7 +176,7 @@ class Yolo:
             image = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
             cv2.imwrite(self.output + 'detection' + str(count) + '.png', image)
 
-            #print(bboxes)
+            
             xmin=9999
             ymin=9999
             xmax=0
@@ -187,7 +187,7 @@ class Yolo:
 
             boxes, scores, pred_classes, num_objects = pred_bbox
 
-            print('predicciones', boxes, scores, pred_classes, num_objects)
+            
             
             for count,box in enumerate(boxes):
                 if int(box[0])!=0 or int(box[1])!=0 or int(box[2])!=0 or int(box[3]!=0):
