@@ -1,6 +1,6 @@
 # 1. Library imports
 
-from numpy import double
+#from numpy import double
 from pydantic import BaseModel 
 import uvicorn
 from fastapi import FastAPI
@@ -50,6 +50,6 @@ def yolov4(params: Data):
 
 
 # 5. Run the API with uvicorn
-#    Will run on http://127.0.0.1:8000
+#    Will run on http://127.0.0.1:8001
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8001)   

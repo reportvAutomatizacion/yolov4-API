@@ -39,6 +39,10 @@ flags.DEFINE_boolean('ocr', False, 'perform generic OCR on detection regions')
 flags.DEFINE_boolean('plate', False, 'perform license plate recognition')
 '''
 
+model= 'yolov4'# 'yolov3 or yolov4'
+tiny= False# 'yolo or yolo-tiny'
+STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(tiny,model)
+
 
 class Yolo:
 
@@ -46,8 +50,8 @@ class Yolo:
         self.framework='tf' #(tf, tflite, trt')
         self.weights= './checkpoints/yolov4-416' #'path to weights file'
         self.size= 416# 'resize images to'
-        self.tiny= False# 'yolo or yolo-tiny'
-        self.model= 'yolov4'# 'yolov3 or yolov4'
+        #self.tiny= False# 'yolo or yolo-tiny'
+        #self.model= 'yolov4'# 'yolov3 or yolov4'
         #self.images= 'data/images/dog.jpg'# 'path to input image'
         self.output= './detections/'# 'path to output folder'
         self.iou= 0.45# 'iou threshold'
@@ -60,7 +64,7 @@ class Yolo:
         self.plate=False #perform license plate recognition
 
         
-        
+    
 
         
 
@@ -72,7 +76,7 @@ class Yolo:
         config = ConfigProto()
         config.gpu_options.allow_growth = True
         session = InteractiveSession(config=config)
-        STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
+        #STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
         input_size = self.size
         images = [img_path]
         
