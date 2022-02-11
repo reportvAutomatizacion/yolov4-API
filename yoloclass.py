@@ -50,7 +50,7 @@ class Yolo:
         self.framework='tf' #(tf, tflite, trt')
         self.weights= './checkpoints/yolov4-416' #'path to weights file'
         self.size= 416# 'resize images to'
-        #self.tiny= False# 'yolo or yolo-tiny'
+        #self.tiny= True# 'yolo or yolo-tiny'
         #self.model= 'yolov4'# 'yolov3 or yolov4'
         #self.images= 'data/images/dog.jpg'# 'path to input image'
         self.output= './detections/'# 'path to output folder'
