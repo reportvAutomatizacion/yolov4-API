@@ -17,8 +17,8 @@ import numpy as np
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
-#framework='tf' #(tf, tflite, trt)
-'''
+
+''' CON FLAGS
 flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
 flags.DEFINE_string('weights', './checkpoints/yolov4-416',
                     'path to weights file')
@@ -38,7 +38,9 @@ flags.DEFINE_boolean('crop', False, 'crop detections from images')
 flags.DEFINE_boolean('ocr', False, 'perform generic OCR on detection regions')
 flags.DEFINE_boolean('plate', False, 'perform license plate recognition')
 '''
-
+print('CARGANDO MODELO')
+weights= './checkpoints/yolov4-416'
+saved_model_loaded = tf.saved_model.load(weights, tags=[tag_constants.SERVING])
 model= 'yolov4'# 'yolov3 or yolov4'
 tiny= False# 'yolo or yolo-tiny'
 STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(tiny,model)
@@ -81,11 +83,12 @@ class Yolo:
         images = [img_path]
         
         # load model
+        '''
         if self.framework == 'tflite':
                 interpreter = tf.lite.Interpreter(model_path=self.weights)
         else:
                 saved_model_loaded = tf.saved_model.load(self.weights, tags=[tag_constants.SERVING])
-
+        '''
         # loop through images in list and run Yolov4 model on each
         for count, image_path in enumerate(images, 1):
             print('image_path',image_path)
