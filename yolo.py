@@ -57,10 +57,6 @@ flags.DEFINE_boolean('plate', False, 'perform license plate recognition')
 
 def yolo_v4(_argv):
 
-
-
-
-    
     print('inicio')
     config = ConfigProto()
     config.gpu_options.allow_growth = True

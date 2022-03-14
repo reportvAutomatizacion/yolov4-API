@@ -17,8 +17,8 @@ import numpy as np
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
-#framework='tf' #(tf, tflite, trt)
-'''
+
+''' CON FLAGS
 flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
 flags.DEFINE_string('weights', './checkpoints/yolov4-416',
                     'path to weights file')
@@ -38,7 +38,12 @@ flags.DEFINE_boolean('crop', False, 'crop detections from images')
 flags.DEFINE_boolean('ocr', False, 'perform generic OCR on detection regions')
 flags.DEFINE_boolean('plate', False, 'perform license plate recognition')
 '''
-
+print('CARGANDO MODELO')
+director = './checkpoints/yolov4-416'
+config = ConfigProto()
+config.gpu_options.allow_growth = True
+session = InteractiveSession(config=config)
+saved_model_loaded = tf.saved_model.load(tags=[tag_constants.SERVING], export_dir = director)
 model= 'yolov4'# 'yolov3 or yolov4'
 tiny= False# 'yolo or yolo-tiny'
 STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(tiny,model)
@@ -47,25 +52,22 @@ STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(tiny,model)
 class Yolo:
 
     def __init__(self):
+        
         self.framework='tf' #(tf, tflite, trt')
         self.weights= './checkpoints/yolov4-416' #'path to weights file'
         self.size= 416# 'resize images to'
-        #self.tiny= False# 'yolo or yolo-tiny'
+        #self.tiny= True# 'yolo or yolo-tiny'
         #self.model= 'yolov4'# 'yolov3 or yolov4'
         #self.images= 'data/images/dog.jpg'# 'path to input image'
         self.output= './detections/'# 'path to output folder'
         self.iou= 0.45# 'iou threshold'
-        self.score= 0.85 #'score threshold
+        self.score= 0.75 #'score threshold
         self.count=False # count objects within images
         self.dont_show=True #'dont show image output'
         self.info=False #print info on detections
         self.crop=False #crop detections from images
         self.ocr=False #perform generic OCR on detection regions
         self.plate=False #perform license plate recognition
-
-        
-    
-
         
 
     def yolo_v4(self, img_path):
@@ -73,19 +75,18 @@ class Yolo:
         no_object=True
 
         print('Yolo v4')
-        config = ConfigProto()
-        config.gpu_options.allow_growth = True
-        session = InteractiveSession(config=config)
+        
         #STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
         input_size = self.size
         images = [img_path]
         
         # load model
+        '''
         if self.framework == 'tflite':
                 interpreter = tf.lite.Interpreter(model_path=self.weights)
         else:
                 saved_model_loaded = tf.saved_model.load(self.weights, tags=[tag_constants.SERVING])
-
+        '''
         # loop through images in list and run Yolov4 model on each
         for count, image_path in enumerate(images, 1):
             print('image_path',image_path)
@@ -179,7 +180,6 @@ class Yolo:
                 image.show()
             image = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
             cv2.imwrite(self.output + 'detection' + str(count) + '.png', image)
-
             
             xmin=9999
             ymin=9999
@@ -188,10 +188,8 @@ class Yolo:
             cajas=list()
             etiquetas=list()
 
-
             boxes, scores, pred_classes, num_objects = pred_bbox
 
-            
             
             for count,box in enumerate(boxes):
                 if int(box[0])!=0 or int(box[1])!=0 or int(box[2])!=0 or int(box[3]!=0):
@@ -202,9 +200,7 @@ class Yolo:
                     coords.append(int(box[2]))
                     coords.append(int(box[3]))
 
-
                     no_object=False  
-
                     cajas.append(coords)
 
                     classes = read_class_names(cfg.YOLO.CLASSES)
@@ -214,17 +210,12 @@ class Yolo:
                     class_name = classes[class_ind]
 
                     etiquetas.append(class_name)
-
-
                 
             scores=list(map(float,scores))
-            #classes=list(map(int,classes))
+
             num_objects=int(num_objects)
-            #print('boxes', cajas, scores, etiquetas, num_objects)
             
             return cajas, scores, etiquetas, num_objects, no_object
-            #return xmin,ymin,xmax,ymax,no_object
-
 
 
 if __name__ == '__main__':
