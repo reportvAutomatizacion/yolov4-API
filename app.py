@@ -7,8 +7,6 @@ from fastapi import FastAPI
 from yoloclass import Yolo
 from cartoon.functions import Cartoon
 
-
-
 # 2. Create the app object
 app = FastAPI()
 
@@ -35,9 +33,15 @@ def yolov4(params: Data):
 
     '''
     
-
-    
     boxes, scores, classes, num_objects, no_object = model.yolo_v4(params.path)
+
+    print({
+                'boxes': boxes,
+                'score': scores,
+                'classes': classes,
+                'num_objects': num_objects,
+                'no_object': no_object}
+          )
 
 
     return {
