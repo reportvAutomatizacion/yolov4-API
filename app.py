@@ -27,13 +27,15 @@ def index():
 # 4. Route with a single parameter, returns the parameter within a message
 #    Located at: http://127.0.0.1:8000/AnyNameHere
 @app.post('/yolov4/')
-def yolov4(params: Data):
+async def yolov4(params: Data):
     '''
     Corre una arquitectura Yolo V4
 
     '''
+
+    resultado = await model.yolo_v4(params.path)
     
-    boxes, scores, classes, num_objects, no_object = model.yolo_v4(params.path)
+    boxes, scores, classes, num_objects, no_object = resultado 
 
     print({
                 'boxes': boxes,

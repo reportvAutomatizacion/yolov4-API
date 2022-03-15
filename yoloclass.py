@@ -45,7 +45,7 @@ class Yolo:
         self.plate=False #perform license plate recognition
         
 
-    def yolo_v4(self, img_path):
+    async def yolo_v4(self, img_path):
 
         no_object=True
 
