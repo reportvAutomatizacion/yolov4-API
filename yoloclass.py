@@ -23,8 +23,7 @@ config = ConfigProto()
 config.gpu_options.allow_growth = True
 session = InteractiveSession(config=config)
 model= 'yolov4'# 'yolov3 or yolov4'
-tiny= False # 'yolo or yolo-tiny'
-STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(tiny,model)
+
 
 class Yolo:
 
@@ -33,9 +32,8 @@ class Yolo:
         self.framework='tf' #(tf, tflite, trt')
         self.weights= './checkpoints/yolov4-416' #'path to weights file'
         self.size= 416# 'resize images to'
-        #self.tiny= True# 'yolo or yolo-tiny'
-        #self.model= 'yolov4'# 'yolov3 or yolov4'
-        #self.images= 'data/images/dog.jpg'# 'path to input image'
+        self.tiny= True# 'yolo or yolo-tiny'
+        self.model= 'yolov4'# 'yolov3 or yolov4'
         self.output= './detections/'# 'path to output folder'
         self.iou= 0.45# 'iou threshold'
         self.score= 0.75 #'score threshold
@@ -52,8 +50,7 @@ class Yolo:
         no_object=True
 
         print('Yolo v4')
-        
-        #STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
+        STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
         input_size = self.size
         images = [img_path]
         
@@ -157,16 +154,11 @@ class Yolo:
             image = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
             cv2.imwrite(self.output + 'detection' + str(count) + '.png', image)
             
-            xmin=9999
-            ymin=9999
-            xmax=0
-            ymax=0
             cajas=list()
             etiquetas=list()
 
             boxes, scores, pred_classes, num_objects = pred_bbox
 
-            
             for count,box in enumerate(boxes):
                 if int(box[0])!=0 or int(box[1])!=0 or int(box[2])!=0 or int(box[3]!=0):
 
@@ -180,7 +172,6 @@ class Yolo:
                     cajas.append(coords)
 
                     classes = read_class_names(cfg.YOLO.CLASSES)
-                    #num_classes = len(classes)
 
                     class_ind = int(pred_classes[count])
                     class_name = classes[class_ind]
@@ -193,11 +184,4 @@ class Yolo:
             
             return cajas, scores, etiquetas, num_objects, no_object
 
-
-if __name__ == '__main__':
-    
-    try:
-        app.run(Yolo.yolo_v4)
-    except SystemExit:
-        pass
  
