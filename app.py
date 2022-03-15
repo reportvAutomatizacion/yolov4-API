@@ -55,9 +55,9 @@ def yolov4(params: Data):
 
 @app.post('/cartoon/')
 def cartoon(params: Data):
-    ''' Deteccion de dibujos animados'''
-
-    #path='cartoon\\603452.jpg'
+    ''' 
+    Deteccion de dibujos animados
+    '''
     
     boxes, scores, classes, no_object= cartoon_model.proces_cartoon(params.path)
 

@@ -37,17 +37,13 @@ def get_cartoon(image, bboxes, labels, scores, thresh): #obtencion de los puntos
         (h, w, d) = image.shape
         boxes=[]
         for bbox, label, score in zip(bboxes, labels, scores):
+
             if score > thresh:
-                
-                
                 xmin, ymin = int(bbox[1]*w), int(bbox[0]*h)
                 xmax, ymax = int(bbox[3]*w), int(bbox[2]*h)
-                
-                
                 box=BoundBox(xmin, ymin, xmax, ymax)
             
                 boxes.append(box)
-                
         
         return boxes
 
@@ -57,8 +53,6 @@ class Cartoon:
         name='Cartoon v1'
 
     def proces_cartoon(self, pathnass):
-
-        
         image = cv2.imread(pathnass)
         image_np = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # The input needs to be a tensor, convert it using `tf.convert_to_tensor`.
@@ -87,8 +81,5 @@ class Cartoon:
                 cajas.append(coords)
         else:
             no_cartoon=True
-
-
-
 
         return cajas, scores, labels, no_cartoon

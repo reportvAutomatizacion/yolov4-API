@@ -26,8 +26,6 @@ flags.DEFINE_integer('size', 416, 'resize images to')
 flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
 flags.DEFINE_string('model', 'yolov4', 'yolov3 or yolov4')
 flags.DEFINE_list('images', './data/images/dog.jpg', 'path to input image')
-
-
 flags.DEFINE_string('output', './detections/', 'path to output folder')
 flags.DEFINE_float('iou', 0.45, 'iou threshold')
 flags.DEFINE_float('score', 0.50, 'score threshold')
@@ -38,16 +36,15 @@ flags.DEFINE_boolean('crop', False, 'crop detections from images')
 flags.DEFINE_boolean('ocr', False, 'perform generic OCR on detection regions')
 flags.DEFINE_boolean('plate', False, 'perform license plate recognition')
 '''
+
 print('CARGANDO MODELO')
 director = './checkpoints/yolov4-416'
 config = ConfigProto()
 config.gpu_options.allow_growth = True
 session = InteractiveSession(config=config)
-saved_model_loaded = tf.saved_model.load(tags=[tag_constants.SERVING], export_dir = director)
 model= 'yolov4'# 'yolov3 or yolov4'
-tiny= False# 'yolo or yolo-tiny'
+tiny= False # 'yolo or yolo-tiny'
 STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(tiny,model)
-
 
 class Yolo:
 
@@ -81,12 +78,11 @@ class Yolo:
         images = [img_path]
         
         # load model
-        '''
         if self.framework == 'tflite':
                 interpreter = tf.lite.Interpreter(model_path=self.weights)
         else:
                 saved_model_loaded = tf.saved_model.load(self.weights, tags=[tag_constants.SERVING])
-        '''
+
         # loop through images in list and run Yolov4 model on each
         for count, image_path in enumerate(images, 1):
             print('image_path',image_path)
