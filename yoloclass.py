@@ -19,17 +19,12 @@ from tensorflow.compat.v1 import InteractiveSession
 
 print('CARGANDO MODELO')
 director = './checkpoints/yolov4-416'
-config = ConfigProto()
-config.gpu_options.allow_growth = True
-session = InteractiveSession(config=config)
-model= 'yolov4'# 'yolov3 or yolov4'
-
 
 class Yolo:
 
     def __init__(self):
         
-        self.framework='tf' #(tf, tflite, trt')
+        self.framework='tflite' #(tf, tflite, trt')
         self.weights= './checkpoints/yolov4-416' #'path to weights file'
         self.size= 416# 'resize images to'
         self.tiny= True# 'yolo or yolo-tiny'
@@ -55,13 +50,10 @@ class Yolo:
         images = [img_path]
         
         # load model
-        if self.framework == 'tflite':
-                interpreter = tf.lite.Interpreter(model_path=self.weights)
-        else:
-                saved_model_loaded = tf.saved_model.load(self.weights, tags=[tag_constants.SERVING])
+        saved_model_loaded = tf.saved_model.load(self.weights)
 
         # loop through images in list and run Yolov4 model on each
-        for count, image_path in enumerate(images, 1):
+        for count, image_path in enumerate(images):
             print('image_path',image_path)
             original_image = cv2.imread(image_path)
             original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
@@ -78,24 +70,12 @@ class Yolo:
                 images_data.append(image_data)
             images_data = np.asarray(images_data).astype(np.float32)
 
-            if self.framework == 'tflite':
-                interpreter.allocate_tensors()
-                input_details = interpreter.get_input_details()
-                output_details = interpreter.get_output_details()
-                interpreter.set_tensor(input_details[0]['index'], images_data)
-                interpreter.invoke()
-                pred = [interpreter.get_tensor(output_details[i]['index']) for i in range(len(output_details))]
-                if self.model == 'yolov3' and self.tiny == True:
-                    boxes, pred_conf = filter_boxes(pred[1], pred[0], score_threshold=0.25, input_shape=tf.constant([input_size, input_size]))
-                else:
-                    boxes, pred_conf = filter_boxes(pred[0], pred[1], score_threshold=0.25, input_shape=tf.constant([input_size, input_size]))
-            else:
-                infer = saved_model_loaded.signatures['serving_default']
-                batch_data = tf.constant(images_data)
-                pred_bbox = infer(batch_data)
-                for key, value in pred_bbox.items():
-                    boxes = value[:, :, 0:4]
-                    pred_conf = value[:, :, 4:]
+            infer = saved_model_loaded.signatures['serving_default']
+            batch_data = tf.constant(images_data)
+            pred_bbox = infer(batch_data)
+            for key, value in pred_bbox.items():
+                boxes = value[:, :, 0:4]
+                pred_conf = value[:, :, 4:]
 
             # run non max suppression on detections
             boxes, scores, classes, valid_detections = tf.image.combined_non_max_suppression(
@@ -182,6 +162,6 @@ class Yolo:
 
             num_objects=int(num_objects)
             
-            return cajas, scores, etiquetas, num_objects, no_object
+        return cajas, scores, etiquetas, num_objects, no_object
 
  
