@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  yolov4api:
+    image: yolov4api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: ["sh", "-c", "pip install debugpy -t /tmp && python /tmp/debugpy --wait-for-client --listen 0.0.0.0:5678 -m uvicorn yoloclass:app --host 0.0.0.0 --port 8001"]
+    ports:
+      - 8001:8001
+      - 5678:5678

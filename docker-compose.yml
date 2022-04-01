@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  yolov4api:
+    image: yolov4api16
+    network_mode: "bridge"
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "9001-9006:80"
+    volumes:
+      - myfileshar:/NASReporTV
+
+
+volumes:
+  myfileshar:
+    driver_opts:
+      type: cifs
+      o: "user=imagen,password=imgrtv123,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=3.1.1,rw,uid=1000,gid=1000,sec=ntlmssp"
+      device: //192.168.0.101/imagenes/Test
+        

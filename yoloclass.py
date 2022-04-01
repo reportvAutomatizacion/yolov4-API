@@ -5,8 +5,7 @@ import tensorflow as tf
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
-from absl import app, flags, logging
-from absl.flags import FLAGS
+
 import core.utils as utils
 from core.yolov4 import filter_boxes
 from core.functions import *
@@ -18,24 +17,6 @@ from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
 
 
-''' CON FLAGS
-flags.DEFINE_string('framework', 'tf', '(tf, tflite, trt')
-flags.DEFINE_string('weights', './checkpoints/yolov4-416',
-                    'path to weights file')
-flags.DEFINE_integer('size', 416, 'resize images to')
-flags.DEFINE_boolean('tiny', False, 'yolo or yolo-tiny')
-flags.DEFINE_string('model', 'yolov4', 'yolov3 or yolov4')
-flags.DEFINE_list('images', './data/images/dog.jpg', 'path to input image')
-flags.DEFINE_string('output', './detections/', 'path to output folder')
-flags.DEFINE_float('iou', 0.45, 'iou threshold')
-flags.DEFINE_float('score', 0.50, 'score threshold')
-flags.DEFINE_boolean('count', False, 'count objects within images')
-flags.DEFINE_boolean('dont_show', False, 'dont show image output')
-flags.DEFINE_boolean('info', False, 'print info on detections')
-flags.DEFINE_boolean('crop', False, 'crop detections from images')
-flags.DEFINE_boolean('ocr', False, 'perform generic OCR on detection regions')
-flags.DEFINE_boolean('plate', False, 'perform license plate recognition')
-'''
 
 print('CARGANDO MODELO')
 director = './checkpoints/yolov4-416'
@@ -213,11 +194,3 @@ class Yolo:
             
             return cajas, scores, etiquetas, num_objects, no_object
 
-
-if __name__ == '__main__':
-    
-    try:
-        app.run(Yolo.yolo_v4)
-    except SystemExit:
-        pass
- 
