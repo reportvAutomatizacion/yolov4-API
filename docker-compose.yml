@@ -2,13 +2,13 @@ version: '3.7'
 
 services:
   yolov4api:
-    image: yolov4api16
+    image: yolov1
     network_mode: "bridge"
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - "9001-9006:80"
+      - "9001:80"
     volumes:
       - myfileshar:/NASReporTV
 

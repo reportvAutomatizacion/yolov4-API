@@ -46,6 +46,7 @@ class Yolo:
         self.crop=False #crop detections from images
         self.ocr=False #perform generic OCR on detection regions
         self.plate=False #perform license plate recognition
+        self.volume_path = '/NASReporTV/'
         
 
     def yolo_v4(self, img_path):
@@ -56,7 +57,7 @@ class Yolo:
         
         #STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(self.tiny,self.model)
         input_size = self.size
-        images = [img_path]
+        images = [self.volume_path + img_path]
         
         # load model
         if self.framework == 'tflite':
