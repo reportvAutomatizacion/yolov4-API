@@ -15,6 +15,8 @@ import cv2
 import numpy as np
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
+from keras import backend as K
+import gc
 
 
 
@@ -192,6 +194,9 @@ class Yolo:
             scores=list(map(float,scores))
 
             num_objects=int(num_objects)
+
+            K.clear_session()
+            gc.collect()
             
             return cajas, scores, etiquetas, num_objects, no_object
 

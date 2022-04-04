@@ -2,7 +2,7 @@ version: '2'
 
 services:
   yolov4api:
-    image: yolov2
+    image: yolov3
     build:
       context: .
       dockerfile: ./Dockerfile
