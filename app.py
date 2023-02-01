@@ -1,11 +1,12 @@
 # 1. Library imports
 
 #from numpy import double
-from pydantic import BaseModel 
 import uvicorn
 from fastapi import FastAPI
-from yoloclass import Yolo
+from pydantic import BaseModel
+
 from cartoon.functions import Cartoon
+from yoloclass import Yolo
 
 # 2. Create the app object
 app = FastAPI()
