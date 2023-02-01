@@ -1,6 +1,3 @@
-# 1. Library imports
-
-#from numpy import double
 import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -33,7 +30,7 @@ def yolov4(params: Data):
     Corre una arquitectura Yolo V4
 
     '''
-    
+
     boxes, scores, classes, num_objects, no_object = model.yolo_v4(params.path)
 
     print({
@@ -52,7 +49,7 @@ def yolov4(params: Data):
                 'num_objects': num_objects,
                 'no_object': no_object,
           }
-  
+ 
 
 @app.post('/cartoon/')
 def cartoon(params: Data):
@@ -64,18 +61,15 @@ def cartoon(params: Data):
 
     if len(boxes)==0:
 
-        return {
-                'no_object': no_object,
+        return {'no_object': no_object,
             }
     
-    else:
-
-        return {
-                    'boxes': boxes,
-                    'score': scores.tolist(),
-                    'classes': classes,
-                    'no_object': no_object,
-            }      
+    return {
+                'boxes': boxes,
+                'score': scores.tolist(),
+                'classes': classes,
+                'no_object': no_object,
+        }      
         
 # 5. Run the API with uvicorn
 #    Will run on http://127.0.0.1:8001

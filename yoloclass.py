@@ -1,24 +1,25 @@
 import os
+
 # comment out below line to enable tensorflow outputs
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
+
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 if len(physical_devices) > 0:
     tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
-import core.utils as utils
-from core.yolov4 import filter_boxes
-from core.functions import *
-from tensorflow.python.saved_model import tag_constants
-from PIL import Image
-import cv2
-import numpy as np
-from tensorflow.compat.v1 import ConfigProto
-from tensorflow.compat.v1 import InteractiveSession
-from keras import backend as K
 import gc
 
+import cv2
+import numpy as np
+from keras import backend as K
+from PIL import Image
+from tensorflow.compat.v1 import ConfigProto, InteractiveSession
+from tensorflow.python.saved_model import tag_constants
 
+import core.utils as utils
+from core.functions import *
+from core.yolov4 import filter_boxes
 
 print('CARGANDO MODELO')
 director = './checkpoints/yolov4-416'
@@ -32,7 +33,7 @@ STRIDES, ANCHORS, NUM_CLASS, XYSCALE = utils.load_config(tiny,model)
 class Yolo:
 
     def __init__(self):
-        
+    
         self.framework='tf' #(tf, tflite, trt')
         self.weights= './checkpoints/yolov4-416' #'path to weights file'
         self.size= 416# 'resize images to'
@@ -49,7 +50,7 @@ class Yolo:
         self.ocr=False #perform generic OCR on detection regions
         self.plate=False #perform license plate recognition
         self.volume_path = '/NASReporTV/'
-        
+
 
     def yolo_v4(self, img_path):
 
@@ -63,9 +64,9 @@ class Yolo:
         
         # load model
         if self.framework == 'tflite':
-                interpreter = tf.lite.Interpreter(model_path=self.weights)
+            interpreter = tf.lite.Interpreter(model_path=self.weights)
         else:
-                saved_model_loaded = tf.saved_model.load(self.weights, tags=[tag_constants.SERVING])
+            saved_model_loaded = tf.saved_model.load(self.weights, tags=[tag_constants.SERVING])
 
         # loop through images in list and run Yolov4 model on each
         for count, image_path in enumerate(images, 1):
