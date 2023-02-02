@@ -70,7 +70,7 @@ To implement YOLOv4 using TensorFlow, first we convert the .weights into the cor
 ```bash
 # Convert darknet weights to tensorflow
 ## yolov4
-python save_model.py --weights ./data/yolov4.weights --output ./checkpoints/yolov4-416 --input_size 416 --model yolov4 
+python save_model.py --weights ./data/yolov4.weights --output ./checkpoints/yolov4-416 --input_size 416 --model yolov4
 
 # Run yolov4 tensorflow model
 python detect.py --weights ./checkpoints/yolov4-416 --size 416 --model yolov4 --images ./data/images/kite.jpg
@@ -109,7 +109,7 @@ python detect.py --weights ./checkpoints/yolov4-tiny-416 --size 416 --model yolo
 The following commands will allow you to run your custom yolov4 model. (video and webcam commands work as well)
 ```
 # custom yolov4
-python save_model.py --weights ./data/custom.weights --output ./checkpoints/custom-416 --input_size 416 --model yolov4 
+python save_model.py --weights ./data/custom.weights --output ./checkpoints/custom-416 --input_size 416 --model yolov4
 
 # Run custom yolov4 tensorflow model
 python detect.py --weights ./checkpoints/custom-416 --size 416 --model yolov4 --images ./data/images/car.jpg
@@ -172,14 +172,14 @@ Resulting output within your shell or terminal:
 
 ### Crop Detections and Save Them as New Images
 I have created a custom function within the file [core/functions.py](https://github.com/theAIGuysCode/yolov4-custom-functions/blob/master/core/functions.py) that can be applied to any detect.py or detect_video.py commands in order to crop the YOLOv4 detections and save them each as their own new image. To crop detections all you need to do is add the `--crop` flag to any command. The resulting cropped images will be saved within the <strong>detections/crop/</strong> folder.
-  
+
  Example of crop flag added to command:
 ```
 python detect.py --weights ./checkpoints/yolov4-416 --size 416 --model yolov4 --images ./data/images/dog.jpg --crop
 ```
  Here is an example of one of the resulting cropped detections from the above command.
  <p align="center"><img src="data/helpers/crop_example.png" height="250"\></p>
- 
+
 <a name="license"/>
 
 ## License Plate Recognition Using Tesseract OCR
@@ -216,7 +216,7 @@ This section will highlight the steps I took in order to implement the License P
 This demo will be showing the step-by-step workflow on the following original image.
 <p align="center"><img src="data/images/car2.jpg" width="640"\></p>
 
-First step of the process is taking the bounding box coordinates from YOLOv4 and simply taking the subimage region within the bounds of the box. Since this image is super small the majority of the time we use cv2.resize() to blow the image up 3x its original size. 
+First step of the process is taking the bounding box coordinates from YOLOv4 and simply taking the subimage region within the bounds of the box. Since this image is super small the majority of the time we use cv2.resize() to blow the image up 3x its original size.
 <p align="center"><img src="data/helpers/subimage.png" width="400"\></p>
 
 Then we convert the image to grayscale and apply a small Gaussian blur to smooth it out.
@@ -289,7 +289,7 @@ You can find the outputted image(s) showing the detections saved within the 'det
 #### TensorFlow Lite int8 Example
 <p align="center"><img src="data/helpers/result-int8.png" width="640"\></p>
 
-Yolov4 and Yolov4-tiny int8 quantization have some issues. I will try to fix that. You can try Yolov3 and Yolov3-tiny int8 quantization 
+Yolov4 and Yolov4-tiny int8 quantization have some issues. I will try to fix that. You can try Yolov3 and Yolov3-tiny int8 quantization
 
 ## YOLOv4 Using TensorRT
 Can also implement YOLOv4 using TensorFlow's TensorRT. TensorRT is a high-performance inference optimizer and runtime that can be used to perform inference in lower precision (FP16 and INT8) on GPUs. TensorRT can allow up to 8x higher performance than regular TensorFlow.
@@ -351,7 +351,7 @@ detect.py:
     (default: False)
   --crop: crop detections and save as new images
     (default: False)
-    
+
 detect_video.py:
   --video: path to input video (use 0 for webcam)
     (default: './data/video/video.mp4')
@@ -383,7 +383,7 @@ detect_video.py:
     (default: False)
 ```
 
-### References  
+### References
 
    Huge shoutout goes to hunglc007 for creating the backbone of this repository:
   * [tensorflow-yolov4-tflite](https://github.com/hunglc007/tensorflow-yolov4-tflite)

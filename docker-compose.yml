@@ -2,7 +2,7 @@ version: '2'
 
 services:
   yolov4api:
-    image: yolov3
+    image: yolov10
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -25,4 +25,3 @@ volumes:
       type: cifs
       o: "user=imagen,password=imgrtv123,file_mode=0777,dir_mode=0777,iocharset=utf8,vers=3.1.1,rw,uid=1000,gid=1000,sec=ntlmssp"
       device: //192.168.0.101/imagenes/Test
-        

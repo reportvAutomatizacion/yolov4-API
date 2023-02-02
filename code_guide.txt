@@ -1,0 +1,3 @@
+Install pre-commit to verify the code before a commit
+Install autopep8 for code format
+Install pylint for code review in real time
