@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 
 from cartoon.functions import Cartoon
-from yoloclass import Yolo
+from yolo import Yolo
 
 logging.basicConfig(level=logging.INFO)
 
@@ -37,9 +37,9 @@ def yolov4(params: Data):
     Run the Yolo V4 arquitecture to detectt objects in the image
 
     """
-    logging.info(params.path)
+    logging.info("Request: %s", params.path)
 
-    boxes, scores, classes, num_objects, no_object = model.yolo_v4(params.path)
+    boxes, scores, classes, num_objects, no_object = model.get_detections(params.path)
 
     response = dict(
         boxes=boxes,
@@ -49,7 +49,7 @@ def yolov4(params: Data):
         no_object=no_object,
     )
 
-    logging.info(response)
+    logging.info("Response: %s", response)
 
     return response
 

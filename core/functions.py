@@ -1,11 +1,13 @@
 import os
-import cv2
 import random
+
+import cv2
 import numpy as np
-import tensorflow as tf
 import pytesseract
-from core.utils import read_class_names
+import tensorflow as tf
+
 from core.config import cfg
+from core.utils import read_class_names
 
 
 # function to count objects, can return total classes or count per class
