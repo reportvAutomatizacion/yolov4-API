@@ -1,17 +1,9 @@
-import os
-
-# comment out below line to enable tensorflow outputs
-os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-import tensorflow as tf
-
-physical_devices = tf.config.experimental.list_physical_devices("GPU")
-if len(physical_devices) > 0:
-    tf.config.experimental.set_memory_growth(physical_devices[0], True)
-
 import gc
+import os
 
 import cv2
 import numpy as np
+import tensorflow as tf
 from keras import backend as K
 from PIL import Image
 from tensorflow.compat.v1 import ConfigProto, InteractiveSession
@@ -20,6 +12,13 @@ from tensorflow.python.saved_model import tag_constants
 import core.utils as utils
 from core.functions import *
 from core.yolov4 import filter_boxes
+
+# comment out below line to enable tensorflow outputs
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
+physical_devices = tf.config.experimental.list_physical_devices("GPU")
+if len(physical_devices) > 0:
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 print("CARGANDO MODELO")
 director = "./checkpoints/yolov4-416"
@@ -48,7 +47,7 @@ class Yolo:
         self.crop = False  # crop detections from images
         self.ocr = False  # perform generic OCR on detection regions
         self.plate = False  # perform license plate recognition
-        self.volume_path = "/NASReporTV/"
+        self.volume_path = ""  # "/NASReporTV/"
 
     def yolo_v4(self, img_path):
         no_object = True
