@@ -37,6 +37,7 @@ def yolov4(params: Data):
     Run the Yolo V4 arquitecture to detectt objects in the image
 
     """
+    logging.info(params.path)
 
     boxes, scores, classes, num_objects, no_object = model.yolo_v4(params.path)
 
@@ -56,7 +57,7 @@ def yolov4(params: Data):
 @app.post("/cartoon/")
 def cartoon(params: Data):
     """
-    Deteccion de dibujos animados
+    Cartoon object detection
     """
 
     boxes, scores, classes, no_object = cartoon_model.proces_cartoon(params.path)
