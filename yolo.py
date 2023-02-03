@@ -33,7 +33,7 @@ class Yolo:
         self.weights = "./checkpoints/yolov4-416"  #'path to weights file'
         self.size = 416  # 'resize images to'
         # self.model= 'yolov4'# 'yolov3 or yolov4'
-        self.output = "./detections/"  # 'path to output folder'
+        self.output = "/NASReporTV/detections/"  # 'path to output folder'
         self.iou = 0.45  # 'iou threshold'
         self.score = 0.75  #'score threshold
         self.count = False  # count objects within images
@@ -62,18 +62,25 @@ class Yolo:
 
         return images_data, original_image
 
+    def get_model_predictions(self, images_data):
+        logging.info("Getting detections.....")
+        infer = self.model_loaded.signatures["serving_default"]
+        batch_data = tf.constant(images_data)
+        pred_bbox = infer(batch_data)
+
+        return pred_bbox
+
     def get_detections(self, img_path):
+        no_object = True
         complete_path = self.volume_path + img_path
         images_data, original_image = self.preprocess_image(complete_path)
         # get image name by using split method
         image_name = complete_path.split("/")[-1]
         image_name = image_name.split(".")[0]
 
-        logging.info("Getting detections.....")
-        no_object = True
-        infer = self.model_loaded.signatures["serving_default"]
-        batch_data = tf.constant(images_data)
-        pred_bbox = infer(batch_data)
+        # Model inference
+        pred_bbox = self.get_model_predictions(images_data)
+
         for _, value in pred_bbox.items():
             boxes = value[:, :, 0:4]
             pred_conf = value[:, :, 4:]
@@ -99,6 +106,8 @@ class Yolo:
         original_h, original_w, _ = original_image.shape
         bboxes = utils.format_boxes(boxes.numpy()[0], original_h, original_w)
 
+        print(valid_detections)
+
         # hold all detection data in one variable
         pred_bbox = [
             bboxes,
@@ -116,6 +125,7 @@ class Yolo:
         # custom allowed classes (uncomment line below to allow detections for only people)
         # allowed_classes = ['person']
 
+        # Draw predicted boxes
         image = utils.draw_bbox(
             original_image,
             pred_bbox,
@@ -124,42 +134,21 @@ class Yolo:
             read_plate=self.plate,
         )
 
+        # Save binary image
         image = Image.fromarray(image.astype(np.uint8))
-        if not self.dont_show:
-            image.show()
         image = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
-        cv2.imwrite(self.output + "detection" + str(1) + ".png", image)
-
-        cajas = list()
-        etiquetas = list()
+        cv2.imwrite(self.output + image_name + ".png", image)
 
         boxes, scores, pred_classes, num_objects = pred_bbox
 
-        print(boxes)
-
-        for count, box in enumerate(boxes):
-            if (
-                int(box[0]) != 0
-                or int(box[1]) != 0
-                or int(box[2]) != 0
-                or int(box[3] != 0)
-            ):
-                coords = list()
-                coords.append(int(box[0]))
-                coords.append(int(box[1]))
-                coords.append(int(box[2]))
-                coords.append(int(box[3]))
-
-                no_object = False
-                cajas.append(coords)
-
-                classes = read_class_names(cfg.YOLO.CLASSES)
-                # num_classes = len(classes)
-
-                class_ind = int(pred_classes[count])
-                class_name = classes[class_ind]
-
-                etiquetas.append(class_name)
+        # Take detections with score > 0
+        score_array = np.array(scores)
+        indices = np.where(score_array > 0)[0]
+        scores = scores[indices]
+        boxes = boxes[indices].tolist()
+        pred_classes = pred_classes[indices]
+        classes = read_class_names(cfg.YOLO.CLASSES)
+        classes_names = [classes[int(number)] for number in pred_classes]
 
         scores = list(map(float, scores))
 
@@ -168,7 +157,7 @@ class Yolo:
         K.clear_session()
         gc.collect()
 
-        return cajas, scores, etiquetas, num_objects, no_object
+        return boxes, scores, classes_names, num_objects, no_object
 
     def run_another_utils(self, image_name, original_image, pred_bbox, allowed_classes):
         # if crop flag is enabled, crop each detection and save it as new image
